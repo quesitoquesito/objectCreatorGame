@@ -10,7 +10,8 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] GameObject buttonMove;
     [SerializeField] GameObject buttonRotate;
     [SerializeField] GameObject buttonDelete;
-    [SerializeField] Button showButtonsArea;
+    [SerializeField] GameObject showButtonsArea;
+    [SerializeField] Button buttonCreateBut;
     [SerializeField] GameObject buttonsBackground;
     [SerializeField] LeanTweenType animUp;
     [SerializeField] LeanTweenType animDown;
@@ -20,7 +21,7 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] float timeBetweenAnim;
     [SerializeField] float animSpeed;
     bool directionUp;
-    bool create;
+    public bool create;
     float yButtonPos;
     float yButBackgroundPos;
     [SerializeField] float maxHeightButtons;
@@ -36,6 +37,8 @@ public class UIBehaviour : MonoBehaviour
     }
     public void ShowOptionsMenu() 
     {
+        buttonCreateBut.interactable = false;
+        showButtonsArea.SetActive(false);
         if (directionUp)
         {
             directionUp = false;
@@ -51,33 +54,35 @@ public class UIBehaviour : MonoBehaviour
             yButBackgroundPos = minHeightBackground; //Por defecto -750
             animVertical = animDown;
         }
-        showButtonsArea.interactable = false;
-        LeanTween.moveLocalX(buttonCreate, -699f, timeBetweenAnim).setOnComplete(() =>
+        LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim).setOnComplete(() =>
         {
             LeanTween.moveLocalY(buttonCreate, yButtonPos, animSpeed).setEase(animVertical);
-            LeanTween.moveLocalX(buttonCreate, -699f, timeBetweenAnim).setOnComplete(() =>
+            LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim).setOnComplete(() =>
             {
                 LeanTween.moveLocalY(buttonMove, yButtonPos, animSpeed).setEase(animVertical);
             });
-            LeanTween.moveLocalX(buttonCreate, -699f, timeBetweenAnim * 2).setOnComplete(() =>
+            LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim * 2).setOnComplete(() =>
             {
                 LeanTween.moveLocalY(buttonRotate, yButtonPos, animSpeed).setEase(animVertical);
             });
-            LeanTween.moveLocalX(buttonCreate, -699f, timeBetweenAnim * 3).setOnComplete(() =>
+            LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim * 3).setOnComplete(() =>
             {
-                LeanTween.moveLocalX(buttonCreate, -699f, timeBetweenAnim).setOnComplete(() =>
+                LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim).setOnComplete(() =>
                 {
-                    LeanTween.moveLocalY(buttonsBackground, yButBackgroundPos, animSpeed).setEase(buttonBackgroundAnimDown).setOnComplete(() => //Animación del fondo de botones.
-                    {
-                        showButtonsArea.interactable = true;
-                    });
+                    LeanTween.moveLocalY(buttonsBackground, yButBackgroundPos, animSpeed).setEase(buttonBackgroundAnimDown); //Animación del fondo de botones.
                 });
                 LeanTween.moveLocalY(buttonDelete, yButtonPos, animSpeed).setEase(animVertical).setOnComplete(() =>
                 {
+                    buttonCreateBut.interactable = true;
                     if (create)
                     {
                         create = false;
+                        showButtonsArea.SetActive(false);
                         sideBarObj.GetComponent<UISideBarBehaviour>().ShowSlider();
+                    }
+                    else if (!create)
+                    {
+                        showButtonsArea.SetActive(true);
                     }
                 });
             });
