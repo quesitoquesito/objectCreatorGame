@@ -9,6 +9,7 @@ public class UISideBarBehaviour : MonoBehaviour
     [SerializeField] float heightInSight;
     [SerializeField] float heightOutOfSight;
     [SerializeField] float sliderAnimDuration;
+    float sliderAnimDurationActual;
     [SerializeField] Button closeSlider;
     [SerializeField] GameObject closeSliderObj;
     [SerializeField] GameObject areaButton;
@@ -31,17 +32,20 @@ public class UISideBarBehaviour : MonoBehaviour
             areaButton.SetActive(false);
             heightNeeded = heightInSight;
             sliderAnim = sliderAnimTypeDown;
+            sliderAnimDurationActual = sliderAnimDuration;
         }
         else if (sliderActive)
         {
             closeSliderObj.SetActive(false);
             heightNeeded = heightOutOfSight;
             sliderAnim = sliderAnimTypeUp;
+            sliderAnimDurationActual = ((heightOutOfSight - gameObject.transform.position.y) * sliderAnimDuration) / heightOutOfSight;
         }
-        LeanTween.moveLocalY(gameObject, gameObject.transform.position.y, appearDelay).setOnComplete(() =>
+        LeanTween.moveY(gameObject, gameObject.transform.position.y, appearDelay).setOnComplete(() =>
         {
-            LeanTween.moveLocalY(gameObject, heightNeeded, sliderAnimDuration).setEase(sliderAnim).setOnComplete(() =>
+            LeanTween.moveLocalY(gameObject, heightNeeded, sliderAnimDurationActual).setEase(sliderAnim).setOnComplete(() =>
             {
+                Debug.Log(sliderAnimDurationActual);
                 //Comprueba si el slider está subiendo para activar el botón (invisible) para los botones del menú.
                 if (sliderActive)
                 {
