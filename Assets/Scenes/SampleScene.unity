@@ -516,6 +516,7 @@ GameObject:
   - component: {fileID: 199855642}
   - component: {fileID: 199855646}
   - component: {fileID: 199855647}
+  - component: {fileID: 199855648}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -658,7 +659,21 @@ MonoBehaviour:
   objectsList:
   - {fileID: 919132149155446097, guid: 4ca535bc0695ae6428842a6f10fc7157, type: 3}
   - {fileID: 919132149155446097, guid: d343787af4d51254994f52627e1a731d, type: 3}
+  objectCreated: {fileID: 0}
   popAnimDuration: 0.2
+--- !u!114 &199855648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 199855641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fbb3af4721cdc948822451d1748d34a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movingObject: 0
 --- !u!1001 &227596379
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2211,17 +2226,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31064889a48f4284ea3a5cf78bc74882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uibehaviourkk: {fileID: 0}
   heightInSight: -694.5
   heightOutOfSight: 1336
-  sliderAnimDuration: 2
+  sliderAnimDuration: 1.2
   closeSlider: {fileID: 1074388475}
   closeSliderObj: {fileID: 1074388473}
   areaButton: {fileID: 1179832805}
-  sliderAnimTypeUp: 26
+  sliderAnimTypeUp: 2
   sliderAnimTypeDown: 6
   appearDelay: 0.3
-  mouseJumpAmount: 20
+  mouseJumpAmount: 40
 --- !u!4 &773534414 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 85b57cf65e2f07e4f8128c278316008d, type: 3}

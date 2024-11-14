@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class UISideBarBehaviour : MonoBehaviour
 {
     //Animación slider: lista cae desde arriba y baja hasta llegar al primer elemento, con rueda dl ratón se puede bajar para ver todos los items
-
-    [SerializeField] SliderButtonsBehaviour uibehaviourkk;
     [SerializeField] float heightInSight;
     [SerializeField] float heightOutOfSight;
     [SerializeField] float sliderAnimDuration;
@@ -33,8 +31,8 @@ public class UISideBarBehaviour : MonoBehaviour
     {
         if (sliderActive)
         {
-            scrollPos += Input.mouseScrollDelta.y * mouseJumpAmount;
-            //LeanTween.moveLocalY = (gameObject, scrollPos, 1f);
+            scrollPos = gameObject.transform.position.y + (-Input.mouseScrollDelta.y * mouseJumpAmount);
+            transform.position = new Vector3(transform.position.x, scrollPos, transform.position.z);
         }
     }
     public void ShowSlider()
@@ -70,10 +68,7 @@ public class UISideBarBehaviour : MonoBehaviour
                     LeanTween.moveX(gameObject, gameObject.transform.position.x, appearDelay).setOnComplete(() =>
                     {
                         closeSliderObj.SetActive(true);
-                        LeanTween.moveY(gameObject, gameObject.transform.position.y, appearDelay).setOnComplete(() =>
-                        {
-                            sliderActive = true;
-                        });
+                        sliderActive = true;
                     });
                 }
             });
@@ -82,9 +77,7 @@ public class UISideBarBehaviour : MonoBehaviour
 
     public void HideSlider()
     {
-        sliderActive = true;
         ShowSlider();
-        uibehaviourkk.ShelfBoxes();
     }
 
 }

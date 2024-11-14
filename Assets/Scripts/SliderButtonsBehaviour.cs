@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class SliderButtonsBehaviour : MonoBehaviour
 {
+    ObjectPositionerBehaviour positionerBehaviour;
     [SerializeField] GameObject[] objectsList;
     GameObject objectSelected;
-    GameObject objectCreated;
+    public GameObject objectCreated;
     int selectedItem;
     //Pop effect
     [SerializeField] float popAnimDuration;
@@ -29,5 +30,6 @@ public class SliderButtonsBehaviour : MonoBehaviour
         objectSelected.transform.LeanScale(Vector3.zero, 0);
         objectCreated = Instantiate(objectSelected, Vector3.zero, Quaternion.identity);
         objectCreated.transform.LeanScale(new Vector3(1, 1, 1), popAnimDuration).setEase(LeanTweenType.easeOutBack);
+        positionerBehaviour.movingObject = true;
     }
 }
