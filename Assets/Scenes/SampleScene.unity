@@ -350,7 +350,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 978.9, y: 2253}
+  m_AnchoredPosition: {x: 978.9, y: 2259}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &160679608
@@ -1176,7 +1176,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 978.9, y: 2045}
+  m_AnchoredPosition: {x: 978.9, y: 2051.8}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &426404352
@@ -2211,6 +2211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31064889a48f4284ea3a5cf78bc74882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uibehaviourkk: {fileID: 0}
   heightInSight: -694.5
   heightOutOfSight: 1336
   sliderAnimDuration: 2
@@ -2220,6 +2221,7 @@ MonoBehaviour:
   sliderAnimTypeUp: 26
   sliderAnimTypeDown: 6
   appearDelay: 0.3
+  mouseJumpAmount: 20
 --- !u!4 &773534414 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 85b57cf65e2f07e4f8128c278316008d, type: 3}
