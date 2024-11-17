@@ -5,25 +5,20 @@ using UnityEngine.UI;
 
 public class UIBehaviour : MonoBehaviour
 {
-    [SerializeField] GameObject sideBarObj;
-    [SerializeField] GameObject buttonCreate;
-    [SerializeField] GameObject buttonMove;
-    [SerializeField] GameObject buttonRotate;
-    [SerializeField] GameObject buttonDelete;
-    [SerializeField] GameObject showButtonsArea;
-    [SerializeField] Button buttonCreateBut;
-    [SerializeField] GameObject buttonsBackground;
-    [SerializeField] LeanTweenType animUp;
-    [SerializeField] LeanTweenType animDown;
-    [SerializeField] LeanTweenType buttonBackgroundAnimUp;
-    [SerializeField] LeanTweenType buttonBackgroundAnimDown;
-    LeanTweenType animVertical;
-    [SerializeField] float timeBetweenAnim;
-    [SerializeField] float animSpeed;
+    [SerializeField] AnimationsBehaviour animationsBehaviour;
+    public GameObject sideBarObj; //acceder desde script de animations a sidebar
+    public GameObject buttonCreate;
+    public GameObject buttonMove;
+    public GameObject buttonRotate;
+    public GameObject buttonDelete;
+    public GameObject showButtonsObj;
+    public Button showButtonsArea;
+    public Button buttonCreateBut;
+    public GameObject buttonsBackground;
     bool directionUp;
     public bool create;
-    float yButtonPos;
-    float yButBackgroundPos;
+    public float yButtonPos;
+    public float yButBackgroundPos;
     [SerializeField] float maxHeightButtons;
     [SerializeField] float minHeightButtons;
     [SerializeField] float maxHeightBackground;
@@ -38,55 +33,23 @@ public class UIBehaviour : MonoBehaviour
     public void ShowOptionsMenu() 
     {
         buttonCreateBut.interactable = false;
-        showButtonsArea.SetActive(false);
+        showButtonsArea.interactable = false;
         if (directionUp)
         {
             directionUp = false;
             yButtonPos = maxHeightButtons; //Por defecto -428
             yButBackgroundPos = maxHeightBackground; //Por defecto -500
-            animVertical = animUp;
-            LeanTween.moveLocalY(buttonsBackground, yButBackgroundPos, animSpeed).setEase(buttonBackgroundAnimUp); //Animación del fondo de botones.
+            animationsBehaviour.animVertical = animationsBehaviour.animUp;
+            LeanTween.moveLocalY(buttonsBackground, yButBackgroundPos, animationsBehaviour.animSpeed).setEase(animationsBehaviour.buttonBackgroundAnimUp); //Animación del fondo de botones.
         }
         else if (!directionUp)
         {
             directionUp = true;
             yButtonPos = minHeightButtons; //Por defecto -649
             yButBackgroundPos = minHeightBackground; //Por defecto -750
-            animVertical = animDown;
+            animationsBehaviour.animVertical = animationsBehaviour.animDown;
         }
-        LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim).setOnComplete(() =>
-        {
-            LeanTween.moveLocalY(buttonCreate, yButtonPos, animSpeed).setEase(animVertical);
-            LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim).setOnComplete(() =>
-            {
-                LeanTween.moveLocalY(buttonMove, yButtonPos, animSpeed).setEase(animVertical);
-            });
-            LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim * 2).setOnComplete(() =>
-            {
-                LeanTween.moveLocalY(buttonRotate, yButtonPos, animSpeed).setEase(animVertical);
-            });
-            LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim * 3).setOnComplete(() =>
-            {
-                LeanTween.moveX(buttonCreate, buttonCreate.transform.position.x, timeBetweenAnim).setOnComplete(() =>
-                {
-                    LeanTween.moveLocalY(buttonsBackground, yButBackgroundPos, animSpeed).setEase(buttonBackgroundAnimDown); //Animación del fondo de botones.
-                });
-                LeanTween.moveLocalY(buttonDelete, yButtonPos, animSpeed).setEase(animVertical).setOnComplete(() =>
-                {
-                    buttonCreateBut.interactable = true;
-                    if (create)
-                    {
-                        create = false;
-                        showButtonsArea.SetActive(false);
-                        sideBarObj.GetComponent<UISideBarBehaviour>().ShowSlider();
-                    }
-                    else if (!create)
-                    {
-                        showButtonsArea.SetActive(true);
-                    }
-                });
-            });
-        });
+        animationsBehaviour.ShowOptionsMenuAnimation();
     }
     public void Create() 
     {

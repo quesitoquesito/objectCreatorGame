@@ -1,28 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class ObjectPositionerBehaviour : MonoBehaviour
 {
-    SliderButtonsBehaviour sliderBehaviour;
-    public bool movingObject;
+    [SerializeField] AnimationsBehaviour animationsBehaviour;
+    [SerializeField] UIBehaviour uiBehaviour;
+    public SliderButtonsBehaviour sliderBehaviour;
+    bool selectingObject;
+    public bool isObjectMoving;
+    public GameObject movingObject;
     private void Start()
     {
-        movingObject = false;
+        isObjectMoving = false;
+        selectingObject = false;
     }
     void Update()
     {
-        if (movingObject)
+        if (isObjectMoving)
         {
-            sliderBehaviour.objectCreated.SetActive(false);
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            movingObject.SetActive(false);
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
             {
-                Vector3 hitPoint = new Vector3(hit.point.x, hit.point.y + 0.5f, hit.point.z);
-                sliderBehaviour.objectCreated.transform.position = hitPoint;
+                movingObject.transform.position = hit.point;
             }
-            sliderBehaviour.objectCreated.SetActive(true);
+            movingObject.SetActive(true);
+            if (Input.GetMouseButtonDown(0))
+            {
+                isObjectMoving = false;
+                animationsBehaviour.SetObjectAnimation();
+            }
         }
+        if (selectingObject)
+        {
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit) && Input.GetMouseButtonDown(0) && !hit.collider.gameObject.CompareTag("CannotModify"))
+            {
+                movingObject = hit.collider.gameObject;
+                selectingObject = false;
+                isObjectMoving = true;
+            }
+        }
+    }
+    public void MoveObject()
+    {
+        selectingObject = true;
+        uiBehaviour.showButtonsArea.interactable = false;
+        uiBehaviour.ShowOptionsMenu();
     }
 }
