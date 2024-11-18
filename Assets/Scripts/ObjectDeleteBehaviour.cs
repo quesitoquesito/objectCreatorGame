@@ -23,6 +23,15 @@ public class ObjectDeleteBehaviour : MonoBehaviour
                 if (Input.GetMouseButtonDown(0) && !hit.collider.gameObject.CompareTag("CannotModify"))
                 {
                     animationsBehaviour.selectedToDeleteTemp = hit.collider.gameObject;
+                    Transform selectedToDeleteParent = hit.collider.gameObject.transform.parent;
+                    if (selectedToDeleteParent != null && !selectedToDeleteParent.CompareTag("CannotModify"))
+                    {
+                        animationsBehaviour.isParent = true;
+                    }
+                    else
+                    {
+                        animationsBehaviour.isParent = false;
+                    }
                     deleting = false;
                     animationsBehaviour.DeleteAnimation();
                 }

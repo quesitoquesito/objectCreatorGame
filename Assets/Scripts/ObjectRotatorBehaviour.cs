@@ -13,6 +13,7 @@ public class ObjectRotatorBehaviour : MonoBehaviour
     bool selectingObject;
     float rotation;
     [SerializeField] float rotationAmount;
+    Transform selectedToRotateParent;
     private void Start()
     {
         isObjectRotating = false;
@@ -21,10 +22,14 @@ public class ObjectRotatorBehaviour : MonoBehaviour
     {
         if (isObjectRotating)
         {
-            if (Input.GetAxis("Mouse ScrollWheel") != 0 && !objectRotating.CompareTag("CannotModify"))
+            if (Input.GetAxis("Mouse ScrollWheel") != 0 && !objectRotating.gameObject.CompareTag("CannotModify"))
             {
                 rotation = -Input.mouseScrollDelta.y * rotationAmount;
-                objectRotating.transform.Rotate(0, rotation, 0);
+                if (selectedToRotateParent != null)
+                {
+                    selectedToRotateParent.transform.Rotate(0, rotation, 0);
+                }
+                else objectRotating.gameObject.transform.Rotate(0, rotation, 0);
             }
             if (Input.GetMouseButtonDown(0))
             {
@@ -37,6 +42,7 @@ public class ObjectRotatorBehaviour : MonoBehaviour
         {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
             {
+                selectedToRotateParent = hit.collider.gameObject.transform.parent;
                 objectRotating = hit.collider.gameObject;
                 isObjectRotating = true;
             }

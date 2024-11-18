@@ -27,10 +27,16 @@ public class AnimationsBehaviour : MonoBehaviour
     //ObjectPositionerBehaviour
     [SerializeField] ObjectPositionerBehaviour objectPositionerBehaviour;
     public float popAnimDuration;
+    [SerializeField] float setObjectMaxSize;
+    GameObject selectedToMove;
+    Transform selectedToMoveParent;
 
     //ObjectDeleteBehaviour
     [SerializeField] ObjectDeleteBehaviour objectDeleteBehaviour;
     [HideInInspector] public GameObject selectedToDeleteTemp;
+    [SerializeField] float deleteObjectMaxSize;
+    [HideInInspector] public bool isParent;
+    Transform selectedToDeleteParent;
 
     //UIBehaviour
     public void ShowOptionsMenuAnimation()
@@ -117,30 +123,48 @@ public class AnimationsBehaviour : MonoBehaviour
                     objectPositionerBehaviour.movingObject.transform.position = hit.point;
                 }
                 objectPositionerBehaviour.movingObject.SetActive(true);
-                objectPositionerBehaviour.movingObject.transform.LeanScale(new Vector3(1, 1, 1), popAnimDuration).setEase(LeanTweenType.easeOutBack);
+                objectPositionerBehaviour.movingObject.transform.LeanScale(Vector3.one, popAnimDuration).setEase(LeanTweenType.easeOutBack);
                 objectPositionerBehaviour.isObjectMoving = true;
             });
         });
     }
     public void SetObjectAnimation()
     {
-        LeanTween.scale(objectPositionerBehaviour.movingObject, new Vector3(1.3f, 1.3f, 1.3f), 0.5f).setEase(LeanTweenType.easeOutQuint);
-        LeanTween.rotateAround(objectPositionerBehaviour.movingObject, Vector3.up, objectPositionerBehaviour.movingObject.transform.rotation.y - 360, 1f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
+        if (isParent)
         {
-            LeanTween.scale(objectPositionerBehaviour.movingObject, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
-            objectPositionerBehaviour.movingObject.transform.Rotate(Vector3.zero);
+            selectedToMove = objectPositionerBehaviour.selectedToMoveParent.gameObject;
+        }
+        else selectedToMove = objectPositionerBehaviour.movingObject;
+        LeanTween.scale(selectedToMove, new Vector3(setObjectMaxSize, setObjectMaxSize, setObjectMaxSize), 0.5f).setEase(LeanTweenType.easeOutQuint);
+        LeanTween.rotateAround(selectedToMove, Vector3.up, selectedToMove.transform.rotation.y - 360, 1f).setEase(LeanTweenType.easeInOutBack);
+        LeanTween.moveX(selectedToMove, selectedToMove.transform.position.x, 0.5f).setOnComplete(() =>
+        {
+            LeanTween.scale(selectedToMove, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
+            selectedToMove.transform.Rotate(Vector3.zero);
         });
     }
 
     //ObjectDeleteBehaviour
     public void DeleteAnimation()
     {
+        if (isParent)
+        {
+            selectedToDeleteParent = selectedToDeleteTemp.transform.parent;
+            selectedToDeleteTemp = selectedToDeleteParent.gameObject;
+        }
         LeanTween.rotateAround(selectedToDeleteTemp, Vector3.up, selectedToDeleteTemp.transform.rotation.y + 360, 0.8f).setEase(LeanTweenType.easeInBack);
-        LeanTween.scale(selectedToDeleteTemp, new Vector3 (1.1f, 1.1f, 1.1f), 0.3f).setEase(LeanTweenType.easeOutQuint).setOnComplete(() =>
+        LeanTween.scale(selectedToDeleteTemp, new Vector3 (deleteObjectMaxSize, deleteObjectMaxSize, deleteObjectMaxSize), 0.3f).setEase(LeanTweenType.easeOutQuint).setOnComplete(() =>
         {
             LeanTween.scale(selectedToDeleteTemp, Vector3.zero, 0.4f).setEase(LeanTweenType.easeInQuint).setOnComplete(() =>
             {
-                Destroy(selectedToDeleteTemp);
+                if (isParent)
+                {
+                    Destroy(selectedToDeleteParent.gameObject);
+                }
+                else
+                {
+                    Destroy(selectedToDeleteTemp);
+                }
                 objectDeleteBehaviour.deleting = true;
             });
         });

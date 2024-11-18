@@ -12,6 +12,7 @@ public class ObjectPositionerBehaviour : MonoBehaviour
     bool selectingObject;
     public bool isObjectMoving;
     public GameObject movingObject;
+    [SerializeField] public Transform selectedToMoveParent;
     private void Start()
     {
         isObjectMoving = false;
@@ -24,11 +25,26 @@ public class ObjectPositionerBehaviour : MonoBehaviour
             movingObject.SetActive(false);
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
             {
-                movingObject.transform.position = hit.point;
+                if (selectedToMoveParent != null)
+                {
+                    selectedToMoveParent.transform.position = hit.point;
+                }
+                else
+                {
+                    movingObject.transform.position = hit.point;
+                }
             }
             movingObject.SetActive(true);
             if (Input.GetMouseButtonDown(0))
             {
+                if (selectedToMoveParent != null)
+                {
+                    animationsBehaviour.isParent = true;
+                }
+                else
+                {
+                    animationsBehaviour.isParent = false;
+                }
                 isObjectMoving = false;
                 animationsBehaviour.SetObjectAnimation();
             }
@@ -37,6 +53,7 @@ public class ObjectPositionerBehaviour : MonoBehaviour
         {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit) && Input.GetMouseButtonDown(0) && !hit.collider.gameObject.CompareTag("CannotModify"))
             {
+                selectedToMoveParent = hit.collider.gameObject.transform.parent;
                 movingObject = hit.collider.gameObject;
                 selectingObject = false;
                 isObjectMoving = true;
