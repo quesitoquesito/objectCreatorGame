@@ -13,7 +13,9 @@ public class ObjectPositionerBehaviour : MonoBehaviour
     public SliderButtonsBehaviour sliderBehaviour;
     bool selectingObject;
     public bool isObjectMoving;
+    //Objeto seleccionado para mover
     [HideInInspector] public GameObject movingObject;
+    //Si se detecta que un objeto tiene un pariente, se hacen los cambios en ese pariente
     [HideInInspector] public Transform selectedToMoveParent;
     private void Start()
     {
@@ -35,6 +37,7 @@ public class ObjectPositionerBehaviour : MonoBehaviour
                 {
                     movingObject.transform.position = hit.point;
                 }
+                animationsBehaviour.areaShadow.transform.position = hit.point;
             }
             movingObject.SetActive(true);
             if (Input.GetMouseButtonDown(0))
@@ -48,6 +51,8 @@ public class ObjectPositionerBehaviour : MonoBehaviour
                     animationsBehaviour.isParent = false;
                 }
                 isObjectMoving = false;
+                animationsBehaviour.showShadowArea = false;
+                animationsBehaviour.AreaShadowAnimation();
                 animationsBehaviour.SetObjectAnimation();
             }
         }
@@ -59,6 +64,7 @@ public class ObjectPositionerBehaviour : MonoBehaviour
                 movingObject = hit.collider.gameObject;
                 selectingObject = false;
                 isObjectMoving = true;
+                animationsBehaviour.AreaShadowAnimation();
             }
         }
     }
@@ -69,5 +75,6 @@ public class ObjectPositionerBehaviour : MonoBehaviour
         selectingObject = true;
         uiBehaviour.showButtonsArea.interactable = false;
         uiBehaviour.ShowOptionsMenu();
+        animationsBehaviour.showShadowArea = true;
     }
 }

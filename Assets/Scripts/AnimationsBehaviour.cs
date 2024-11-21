@@ -13,9 +13,13 @@ public class AnimationsBehaviour : MonoBehaviour
     public LeanTweenType animDown;
     public LeanTweenType buttonBackgroundAnimUp;
     public LeanTweenType buttonBackgroundAnimDown;
+    public LeanTweenType buttonScaleAnimAppear;
+    public LeanTweenType buttonScaleAnimDisappear;
+    [HideInInspector] public LeanTweenType buttonScaleAnim;
     [HideInInspector] public LeanTweenType animVertical;
     public float timeBetweenAnim;
     public float animSpeed;
+    [SerializeField] float scaleButtonAnimSpeed;
 
     //UISideBarBehaviour
     [SerializeField] UISideBarBehaviour uiSideBarBehaviour;
@@ -31,6 +35,7 @@ public class AnimationsBehaviour : MonoBehaviour
     public float popAnimDuration;
     [SerializeField] float setObjectMaxSize;
     GameObject selectedToMove;
+    Vector3 selectedToMoveOGScale;
 
     //ObjectDeleteBehaviour
     [SerializeField] ObjectDeleteBehaviour objectDeleteBehaviour;
@@ -38,6 +43,26 @@ public class AnimationsBehaviour : MonoBehaviour
     [SerializeField] float deleteObjectMaxSize;
     [HideInInspector] public bool isParent;
     Transform selectedToDeleteParent;
+
+    //ShadowArea
+    public GameObject areaShadow;
+    [HideInInspector] public bool showShadowArea;
+    [SerializeField] float shadowAnimSpeed;
+    [SerializeField] float shadowScale;
+    [SerializeField] LeanTweenType shadowAnimAppear;
+    [SerializeField] LeanTweenType shadowAnimDisappear;
+    LeanTweenType shadowNeededAnim;
+    Vector3 shadowNeededScale;
+
+
+
+    private void Start()
+    {
+        showShadowArea = false;
+        areaShadow.transform.localScale = Vector3.zero;
+        uiBehaviour.buttonScale.transform.localScale = Vector3.zero;
+        areaShadow.SetActive(true);
+    }
 
     //UIBehaviour
     public void ShowOptionsMenuAnimation()
@@ -61,6 +86,7 @@ public class AnimationsBehaviour : MonoBehaviour
                 });
                 LeanTween.moveLocalY(uiBehaviour.buttonDelete, uiBehaviour.yButtonPos, animSpeed).setEase(animVertical).setOnComplete(() =>
                 {
+                    LeanTween.scale(uiBehaviour.buttonScale, new Vector3(uiBehaviour.buttonScaleScale, uiBehaviour.buttonScaleScale, uiBehaviour.buttonScaleScale), scaleButtonAnimSpeed).setEase(buttonScaleAnim);
                     for (int i = 0; i < uiBehaviour.menuButtons.Length; i++)
                     {
                         uiBehaviour.menuButtons[i].interactable = true;
@@ -134,6 +160,8 @@ public class AnimationsBehaviour : MonoBehaviour
                 objectPositionerBehaviour.movingObject.SetActive(true);
                 objectPositionerBehaviour.movingObject.transform.LeanScale(Vector3.one, popAnimDuration).setEase(LeanTweenType.easeOutBack);
                 objectPositionerBehaviour.isObjectMoving = true;
+                showShadowArea = true;
+                AreaShadowAnimation();
             });
         });
     }
@@ -144,12 +172,15 @@ public class AnimationsBehaviour : MonoBehaviour
             selectedToMove = objectPositionerBehaviour.selectedToMoveParent.gameObject;
         }
         else selectedToMove = objectPositionerBehaviour.movingObject;
-        LeanTween.scale(selectedToMove, new Vector3(setObjectMaxSize, setObjectMaxSize, setObjectMaxSize), 0.5f).setEase(LeanTweenType.easeOutQuint);
+        selectedToMoveOGScale = selectedToMove.transform.localScale;
+        LeanTween.scale(selectedToMove, new Vector3(selectedToMoveOGScale.x + setObjectMaxSize, selectedToMoveOGScale.y + setObjectMaxSize, selectedToMoveOGScale.z + setObjectMaxSize), 0.5f).setEase(LeanTweenType.easeOutQuint);
         LeanTween.rotateAround(selectedToMove, Vector3.up, selectedToMove.transform.rotation.y - 360, 1f).setEase(LeanTweenType.easeInOutBack);
         LeanTween.moveX(selectedToMove, selectedToMove.transform.position.x, 0.5f).setOnComplete(() =>
         {
-            LeanTween.scale(selectedToMove, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
+            LeanTween.scale(selectedToMove, selectedToMoveOGScale, 0.5f).setEase(LeanTweenType.easeOutBack);
             selectedToMove.transform.Rotate(Vector3.zero);
+            objectPositionerBehaviour.selectedToMoveParent = null;
+            objectPositionerBehaviour.movingObject = null;
         });
         if (popUpsBehaviour.activateCreatingPopUp)
         {
@@ -187,5 +218,20 @@ public class AnimationsBehaviour : MonoBehaviour
                 objectDeleteBehaviour.deleting = true;
             });
         });
+    }
+
+    public void AreaShadowAnimation()
+    {
+        if (showShadowArea)
+        {
+            shadowNeededScale = new Vector3 (shadowScale, 0.001767956f, shadowScale);
+            shadowNeededAnim = shadowAnimAppear;
+        }
+        else if (!showShadowArea)
+        {
+            shadowNeededScale = Vector3.zero;
+            shadowNeededAnim = shadowAnimDisappear;
+        }
+        LeanTween.scale(areaShadow, shadowNeededScale, shadowAnimSpeed).setEase(shadowNeededAnim);
     }
 }

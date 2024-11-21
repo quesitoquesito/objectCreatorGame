@@ -15,7 +15,6 @@ public class SliderButtonsBehaviour : MonoBehaviour
 
     GameObject objectSelected;
     [HideInInspector] public GameObject objectCreated;
-    int selectedItem;
 
     [SerializeField] ObjectPositionerBehaviour positionerBehaviour;
     [SerializeField] ObjectRotatorBehaviour rotatorBehaviour;

@@ -14,6 +14,7 @@ public class PopUpsBehaviour : MonoBehaviour
     [SerializeField] GameObject movePopUp;
     [SerializeField] GameObject rotatePopUp;
     [SerializeField] GameObject deletePopUp;
+    [SerializeField] GameObject scalePopUp;
 
     [SerializeField] LeanTweenType PopUpCenter;
     [SerializeField] LeanTweenType PopUpDown;
@@ -25,6 +26,7 @@ public class PopUpsBehaviour : MonoBehaviour
     [HideInInspector] public bool activateMovingPopUp;
     [HideInInspector] public bool activateRotatingPopUp;
     [HideInInspector] public bool activateDeletingPopUp;
+    [HideInInspector] public bool activateScalingPopUp;
 
     [HideInInspector] public bool center;
 
@@ -104,5 +106,20 @@ public class PopUpsBehaviour : MonoBehaviour
             animWanted = PopUpUp;
         }
         LeanTween.moveLocalY(deletePopUp, heightWanted, animDuration).setEase(animWanted);
+    }
+
+    public void ScalingPopUp()
+    {
+        if (activateScalingPopUp)
+        {
+            heightWanted = minHeight;
+            animWanted = PopUpDown;
+        }
+        else
+        {
+            heightWanted = maxHeight;
+            animWanted = PopUpUp;
+        }
+        LeanTween.moveLocalY(scalePopUp, heightWanted, animDuration).setEase(animWanted);
     }
 }

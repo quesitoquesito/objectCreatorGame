@@ -12,6 +12,7 @@ public class UIBehaviour : MonoBehaviour
     public GameObject buttonMove;
     public GameObject buttonRotate;
     public GameObject buttonDelete;
+    public GameObject buttonScale;
     public GameObject showButtonsObj;
     public Button showButtonsArea;
     public Button[] menuButtons;
@@ -24,6 +25,7 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField] float minHeightButtons;
     [SerializeField] float maxHeightBackground;
     [SerializeField] float minHeightBackground;
+    [HideInInspector] public float buttonScaleScale;
 
 
     private void Start()
@@ -43,6 +45,8 @@ public class UIBehaviour : MonoBehaviour
             directionUp = false;
             yButtonPos = maxHeightButtons; //Por defecto -428
             yButBackgroundPos = maxHeightBackground; //Por defecto -500
+            buttonScaleScale = 1f;
+            animationsBehaviour.buttonScaleAnim = animationsBehaviour.buttonScaleAnimDisappear;
             animationsBehaviour.animVertical = animationsBehaviour.animUp;
             LeanTween.moveLocalY(buttonsBackground, yButBackgroundPos, animationsBehaviour.animSpeed).setEase(animationsBehaviour.buttonBackgroundAnimUp); //Animación del fondo de botones.
         }
@@ -51,6 +55,8 @@ public class UIBehaviour : MonoBehaviour
             directionUp = true;
             yButtonPos = minHeightButtons; //Por defecto -649
             yButBackgroundPos = minHeightBackground; //Por defecto -750
+            buttonScaleScale = 0f;
+            animationsBehaviour.buttonScaleAnim = animationsBehaviour.buttonScaleAnimAppear;
             animationsBehaviour.animVertical = animationsBehaviour.animDown;
         }
         animationsBehaviour.ShowOptionsMenuAnimation();
