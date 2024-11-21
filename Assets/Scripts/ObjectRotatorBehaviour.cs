@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 
 public class ObjectRotatorBehaviour : MonoBehaviour
 {
+    [SerializeField] PopUpsBehaviour popUpsBehaviour;
     [SerializeField] UIBehaviour uiBehaviour;
     [SerializeField] SliderButtonsBehaviour sliderBehaviour;
     public GameObject objectRotating;
@@ -33,6 +34,8 @@ public class ObjectRotatorBehaviour : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(0))
             {
+                popUpsBehaviour.activateRotatingPopUp = false;
+                popUpsBehaviour.RotatingPopUp();
                 isObjectRotating = false;
                 selectingObject = false;
                 uiBehaviour.showButtonsArea.interactable = true;
@@ -50,6 +53,8 @@ public class ObjectRotatorBehaviour : MonoBehaviour
     }
     public void RotateObject()
     {
+        popUpsBehaviour.activateRotatingPopUp = true;
+        popUpsBehaviour.RotatingPopUp();
         selectingObject = true;
         uiBehaviour.showButtonsArea.interactable = false;
         uiBehaviour.ShowOptionsMenu();

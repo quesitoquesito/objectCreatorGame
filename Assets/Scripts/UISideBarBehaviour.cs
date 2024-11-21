@@ -6,18 +6,22 @@ using static UnityEngine.GraphicsBuffer;
 
 public class UISideBarBehaviour : MonoBehaviour
 {
+    [SerializeField] PopUpsBehaviour popUpsBehaviour;
     [SerializeField] AnimationsBehaviour animationsBehaviour;
 
     public float heightInSight;
     public float heightOutOfSight;
-    [SerializeField] Button closeSlider; //revisar uso, si se intercambia area por botón
+    [SerializeField] Button closeSlider;
     public GameObject closeSliderObj;
     public Button areaButton;
-    public float heightNeeded;
-    public bool sliderActive;
+    [HideInInspector] public float heightNeeded;
+    [HideInInspector] public bool sliderActive;
     [SerializeField] float mouseJumpAmount;
     float scrollPos;
     public Button[] sliderButtons;
+
+    [SerializeField] float minHeightInSight;
+    [SerializeField] float maxHeightInSight;
 
     private void Start()
     {
@@ -30,10 +34,19 @@ public class UISideBarBehaviour : MonoBehaviour
     }
     private void Update()
     {
+        //Si el slider está activo permite usar el scroll para navegar entre los objetos, también marca los límites de altura para no hacer desaparecer el slider.
         if (sliderActive)
         {
-            scrollPos = gameObject.transform.position.y + (-Input.mouseScrollDelta.y * mouseJumpAmount);
-            transform.position = new Vector3(transform.position.x, scrollPos, transform.position.z);
+            scrollPos = Mathf.Round(gameObject.transform.localPosition.y + (-Input.mouseScrollDelta.y * mouseJumpAmount));
+            if (scrollPos < maxHeightInSight)
+            {
+                scrollPos = maxHeightInSight;
+            }
+            if (scrollPos > minHeightInSight)
+            {
+                scrollPos = minHeightInSight;
+            }
+            transform.localPosition = new Vector3(transform.localPosition.x, scrollPos, transform.localPosition.z);
         }
     }
     public void ShowSlider()
@@ -57,6 +70,8 @@ public class UISideBarBehaviour : MonoBehaviour
 
     public void HideSlider()
     {
+        popUpsBehaviour.activateCreatingPopUp = false;
+        popUpsBehaviour.CreatingPopUp();
         ShowSlider();
     }
 

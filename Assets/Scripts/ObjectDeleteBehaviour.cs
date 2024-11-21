@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ObjectDeleteBehaviour : MonoBehaviour
 {
+    [SerializeField] PopUpsBehaviour popUpsBehaviour;
     [SerializeField] AnimationsBehaviour animationsBehaviour;
     [SerializeField] UIBehaviour uiBehaviour;
     public bool deleting;
@@ -37,14 +38,17 @@ public class ObjectDeleteBehaviour : MonoBehaviour
                 }
                 if (Input.GetMouseButtonDown(1))
                 {
+                    popUpsBehaviour.activateDeletingPopUp = false;
+                    popUpsBehaviour.DeletingPopUp();
                     deleting = false;
-                    uiBehaviour.showButtonsArea.interactable = true;
                 }
             }
         }
     }
     public void Deleting()
     {
+        popUpsBehaviour.activateDeletingPopUp = true;
+        popUpsBehaviour.DeletingPopUp();
         deleting = true;
         uiBehaviour.showButtonsArea.interactable = false;
         uiBehaviour.ShowOptionsMenu();

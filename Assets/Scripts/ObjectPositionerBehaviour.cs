@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
 public class ObjectPositionerBehaviour : MonoBehaviour
 {
+    [SerializeField] PopUpsBehaviour popUpsBehaviour;
     [SerializeField] AnimationsBehaviour animationsBehaviour;
     [SerializeField] UIBehaviour uiBehaviour;
     public SliderButtonsBehaviour sliderBehaviour;
     bool selectingObject;
     public bool isObjectMoving;
-    public GameObject movingObject;
-    [SerializeField] public Transform selectedToMoveParent;
+    [HideInInspector] public GameObject movingObject;
+    [HideInInspector] public Transform selectedToMoveParent;
     private void Start()
     {
         isObjectMoving = false;
@@ -62,6 +64,8 @@ public class ObjectPositionerBehaviour : MonoBehaviour
     }
     public void MoveObject()
     {
+        popUpsBehaviour.activateMovingPopUp = true;
+        popUpsBehaviour.MovingPopUp();
         selectingObject = true;
         uiBehaviour.showButtonsArea.interactable = false;
         uiBehaviour.ShowOptionsMenu();

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class AnimationsBehaviour : MonoBehaviour
 {
+    //PopUps
+    [SerializeField] PopUpsBehaviour popUpsBehaviour;
     //UIBehaviour
     [SerializeField] UIBehaviour uiBehaviour;
     public LeanTweenType animUp;
@@ -29,7 +31,6 @@ public class AnimationsBehaviour : MonoBehaviour
     public float popAnimDuration;
     [SerializeField] float setObjectMaxSize;
     GameObject selectedToMove;
-    Transform selectedToMoveParent;
 
     //ObjectDeleteBehaviour
     [SerializeField] ObjectDeleteBehaviour objectDeleteBehaviour;
@@ -60,7 +61,10 @@ public class AnimationsBehaviour : MonoBehaviour
                 });
                 LeanTween.moveLocalY(uiBehaviour.buttonDelete, uiBehaviour.yButtonPos, animSpeed).setEase(animVertical).setOnComplete(() =>
                 {
-                    uiBehaviour.buttonCreateBut.interactable = true;
+                    for (int i = 0; i < uiBehaviour.menuButtons.Length; i++)
+                    {
+                        uiBehaviour.menuButtons[i].interactable = true;
+                    }
                     if (uiBehaviour.create)
                     {
                         uiBehaviour.create = false;
@@ -83,9 +87,14 @@ public class AnimationsBehaviour : MonoBehaviour
         {
             LeanTween.moveLocalY(uiSideBarBehaviour.gameObject, uiSideBarBehaviour.heightNeeded, sliderAnimDurationActual).setEase(sliderAnim).setOnComplete(() =>
             {
-                //Comprueba si el slider está subiendo para activar el botón (invisible) para los botones del menú.
+                //Comprueba si el slider está subiendo para activar el botón para los botones del menú.
                 if (uiSideBarBehaviour.sliderActive)
                 {
+                    if (popUpsBehaviour.activateCreatingPopUp)
+                    {
+                        popUpsBehaviour.center = true;
+                        popUpsBehaviour.CenterCreatePopUp();
+                    }
                     uiSideBarBehaviour.areaButton.interactable = true;
                     uiSideBarBehaviour.sliderActive = false;
                     for (int i = 0; i < uiSideBarBehaviour.sliderButtons.Length; i++)
@@ -142,6 +151,16 @@ public class AnimationsBehaviour : MonoBehaviour
             LeanTween.scale(selectedToMove, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
             selectedToMove.transform.Rotate(Vector3.zero);
         });
+        if (popUpsBehaviour.activateCreatingPopUp)
+        {
+            popUpsBehaviour.activateCreatingPopUp = false;
+            popUpsBehaviour.CreatingPopUp();
+        }
+        if (popUpsBehaviour.activateMovingPopUp)
+        {
+            popUpsBehaviour.activateMovingPopUp = false;
+            popUpsBehaviour.MovingPopUp();
+        }
     }
 
     //ObjectDeleteBehaviour

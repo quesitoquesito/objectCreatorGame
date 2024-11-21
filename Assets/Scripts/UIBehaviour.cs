@@ -5,18 +5,19 @@ using UnityEngine.UI;
 
 public class UIBehaviour : MonoBehaviour
 {
+    [SerializeField] PopUpsBehaviour popUpsBehaviour;
     [SerializeField] AnimationsBehaviour animationsBehaviour;
-    public GameObject sideBarObj; //acceder desde script de animations a sidebar
+    public GameObject sideBarObj;
     public GameObject buttonCreate;
     public GameObject buttonMove;
     public GameObject buttonRotate;
     public GameObject buttonDelete;
     public GameObject showButtonsObj;
     public Button showButtonsArea;
-    public Button buttonCreateBut;
+    public Button[] menuButtons;
     public GameObject buttonsBackground;
     bool directionUp;
-    public bool create;
+    [HideInInspector] public bool create;
     public float yButtonPos;
     public float yButBackgroundPos;
     [SerializeField] float maxHeightButtons;
@@ -32,7 +33,10 @@ public class UIBehaviour : MonoBehaviour
     }
     public void ShowOptionsMenu() 
     {
-        buttonCreateBut.interactable = false;
+        for (int i = 0; i < menuButtons.Length; i++)
+        {
+            menuButtons[i].interactable = false;
+        }
         showButtonsArea.interactable = false;
         if (directionUp)
         {
@@ -54,6 +58,8 @@ public class UIBehaviour : MonoBehaviour
     public void Create() 
     {
         create = true;
+        popUpsBehaviour.activateCreatingPopUp = true;
+        popUpsBehaviour.CreatingPopUp();
         ShowOptionsMenu();
     }
 }
